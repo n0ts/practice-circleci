@@ -37,7 +37,7 @@ jobs:
       # - MYSQL_USER: test_user
       # - MYSQL_PASSWORD: testpw
 
-    working_directory: /practice-circleci
+    working_directory: /tmp/practice-circleci
 
     parallelism: 1
 
