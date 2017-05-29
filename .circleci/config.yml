@@ -57,6 +57,8 @@ jobs:
           command: |
             cat /proc/cpuinfo
             cat /proc/meminfo
+            ls -l /
+            whoami
 
       - run:
           command: |
@@ -67,20 +69,6 @@ jobs:
       - restore_cache:
           keys:
             - my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
-
-      - run:
-          name: Run test text
-          command: |
-            mkdir /test
-            echo "TEST $(date +%Y%m%d%H%M%S)" > /test/TEST-$(date +%Y%m%d%H%M%S).txt
-            ls -l /test
-          # shell: /boin/bash
-          # environment:
-          #   FOO: BAR
-          # background: true
-          # working_directory: /root
-          # no_output_timeout: 1h
-          # when: always or on_success or on_fail (default on_success)
 
       - save_cache:
           key: my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
