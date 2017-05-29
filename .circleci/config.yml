@@ -57,8 +57,12 @@ jobs:
           command: |
             cat /proc/cpuinfo
             cat /proc/meminfo
-            ls -l /
             whoami
+
+      - run:
+          name: Show package
+          command: |
+            dpkg -l
 
       - run:
           command: |
