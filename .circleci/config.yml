@@ -29,6 +29,7 @@ jobs:
             }
             trigger_job build-test-1
             trigger_job build-test-2
+            trigger_job build-test-3
 
   build-common: &common-build
     docker:
@@ -41,6 +42,7 @@ jobs:
           name: Test common
           command: |
             ls -l /work
+            echo $FOO
 
   build-test-1:
     <<: *common-build
@@ -65,3 +67,9 @@ jobs:
           command: |
             echo "Test 2"
             python --version
+
+  build-test-3:
+    <<: *common-build
+
+    environment:
+      FOO: bar
