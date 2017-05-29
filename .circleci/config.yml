@@ -1,98 +1,67 @@
 version: 2
 
+# https://circleci.com/gh/teppeis-sandbox/circleci-multiple-versions/27#config/containers/0
 jobs:
   build:
-    # The resource classes are as follows:
-    # small: 1CPU and 1RAM
-    # medium: 2CPU and 4RAM (current 1.0 default)
-    # large: 4CPU and 8RAM
-    ##resource_class: large
-
     docker:
       - image: n0ts/docker-circleci
         user: docker
-        ##command: [foo, bar]
-        ##entrypoint: entrypoint.sh
-        # environment:
-        #   ENV: CI
-
-      # or - machine: true
-
-      # - image: redis:3
-
-      # - image: mysql:5.7
-      #   environment:
-      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      #     MYSQL_DATABASE: test
-      #     MYSQL_USER: test_user
-      #     MYSQL_PASSWORD: testpw
-
-      # - image: postgres:9
-      #   environment:
-      #     POSTGRES_DB: test
-
-    environment:
-      - CI: true
-      # - MYSQL_DATABASE: test
-      # - MYSQL_USER: test_user
-      # - MYSQL_PASSWORD: testpw
 
     working_directory: /work/practice-circleci
-
-    parallelism: 1
-
-    # branches:
-    #   only:
-    #     - master
-    #   ignore:
-    #     - develop
 
     steps:
       - checkout
 
-      # - setup_remote_docker
-
       - run:
-          name: Show resource
+          name: Trigger Jobs
           command: |
-            cat /proc/cpuinfo
-            cat /proc/meminfo
+            function trigger_job() {
+              job_name=$1
+              curl -X POST -H "Content-Type: application/json" \
+                  -f \
+                  -d "{
+                      \"build_parameters\": {
+                        \"CIRCLE_JOB\": \"$job_name\"
+                      },
+                      \"revision\": \"$CIRCLE_SHA1\"
+                    }" \
+                  https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH?circle-token=$CIRCLE_API_TOKEN
+            }
+            trigger_job build-test-1
+            trigger_job build-test-2
 
-      - restore_cache:
-          keys:
-            - my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
+  build-common: &common-build
+    docker:
+      - image: n0ts/ubuntu
 
+    working_directory: /work
+
+    steps:
       - run:
-          name: Run test text
+          name: Test common
           command: |
-            mkdir /work/test
-            echo "TEST $(date +%Y%m%d%H%M%S)" > /work/test/TEST-$(date +%Y%m%d%H%M%S).txt
-            ls -l /work/test
-          # shell: /boin/bash
-          # environment:
-          #   FOO: BAR
-          # background: true
-          # working_directory: /root
-          # no_output_timeout: 1h
-          # when: always or on_success or on_fail (default on_success)
+            ls -l /work
 
-      - save_cache:
-          key: my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
-          paths:
-            - /work/test/
+  build-test-1:
+    <<: *common-build
+    docker:
+      - image: n0ts/ubuntu-java
 
-      - deploy:
-          name: Deploy it
+    steps:
+      - run:
+          name: Test 1
           command: |
-            echo "deploy!!!"
+            echo "Test 1"
+            java -version
 
-      # - store_artifacts:
-      #     path: /code/test-results
-      #     destination: prefix
+  build-test-2:
+    <<: *common-build
+    docker:
+      - image: n0ts/ubuntu-python
 
-      # - store_test_results:
-      #     path: /tmp/test-results
-
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "b7:35:a6:4e:9b:0d:6d:d4:78:1e:9a:97:2a:66:6b:be"
+    steps:
+      - run:
+          name: Test 2
+          command: |
+            echo "Test 2"
+            python --version
