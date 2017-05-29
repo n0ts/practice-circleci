@@ -37,7 +37,7 @@ jobs:
       # - MYSQL_USER: test_user
       # - MYSQL_PASSWORD: testpw
 
-    working_directory: /work/practice-circleci
+    working_directory: /practice-circleci
 
     parallelism: 1
 
@@ -71,9 +71,9 @@ jobs:
       - run:
           name: Run test text
           command: |
-            mkdir /work/test
-            echo "TEST $(date +%Y%m%d%H%M%S)" > /work/test/TEST-$(date +%Y%m%d%H%M%S).txt
-            ls -l /work/test
+            mkdir /test
+            echo "TEST $(date +%Y%m%d%H%M%S)" > /test/TEST-$(date +%Y%m%d%H%M%S).txt
+            ls -l /test
           # shell: /boin/bash
           # environment:
           #   FOO: BAR
@@ -85,7 +85,7 @@ jobs:
       - save_cache:
           key: my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
           paths:
-            - /work/test/
+            - /test/
 
       - deploy:
           name: Deploy it
