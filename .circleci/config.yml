@@ -35,6 +35,9 @@ jobs:
     docker:
       - image: n0ts/ubuntu
 
+    environment:
+      BAR: foo
+
     working_directory: /work
 
     steps:
@@ -43,6 +46,7 @@ jobs:
           command: |
             ls -l /work
             echo $FOO
+            echo $BAR
 
   build-test-1:
     <<: *common-build
