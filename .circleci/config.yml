@@ -56,7 +56,7 @@ jobs:
     environment:
       TEST1: true
 
-  steps:
+    steps:
       - run:
           name: Test 1
           command: |
