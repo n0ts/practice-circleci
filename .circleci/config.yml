@@ -24,14 +24,14 @@ jobs:
     steps:
       - run:
           command: |
-            apk add --no-cache curl bash git openssh
+            apk add --no-cache curl git openssh
 
       - checkout
 
       - setup_remote_docker
 
       - run:
-          comamnd: |
+          command: |
             curl -o /usr/local/bin/circleci https://circle-downloads.s3.amazonaws.com/releases/build_agent_wrapper/circleci
             chmod +x /usr/local/bin/circleci
             circleci version
