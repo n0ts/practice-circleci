@@ -53,7 +53,10 @@ jobs:
     docker:
       - image: n0ts/ubuntu-java
 
-    steps:
+    environment:
+      TEST1: true
+
+  steps:
       - run:
           name: Test 1
           command: |
