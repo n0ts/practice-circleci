@@ -9,35 +9,9 @@ jobs:
     ##resource_class: large
 
     docker:
-      - image: n0ts/docker-circleci
-        user: docker
-        ##command: [foo, bar]
-        ##entrypoint: entrypoint.sh
-        # environment:
-        #   ENV: CI
+      - image: docker:stable-dind
 
-      # or - machine: true
-
-      # - image: redis:3
-
-      # - image: mysql:5.7
-      #   environment:
-      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      #     MYSQL_DATABASE: test
-      #     MYSQL_USER: test_user
-      #     MYSQL_PASSWORD: testpw
-
-      # - image: postgres:9
-      #   environment:
-      #     POSTGRES_DB: test
-
-    environment:
-      - CI: true
-      # - MYSQL_DATABASE: test
-      # - MYSQL_USER: test_user
-      # - MYSQL_PASSWORD: testpw
-
-    working_directory: /work/practice-circleci
+    working_directory: /practice-circleci
 
     parallelism: 1
 
@@ -48,51 +22,29 @@ jobs:
     #     - develop
 
     steps:
+      - run:
+          command: |
+            apk add --no-cache curl bash git openssh
+
       - checkout
 
-      # - setup_remote_docker
+      - setup_remote_docker
 
       - run:
-          name: Show resource
-          command: |
-            cat /proc/cpuinfo
-            cat /proc/meminfo
-
-      - restore_cache:
-          keys:
-            - my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
+          comamnd: |
+            curl -o /usr/local/bin/circleci https://circle-downloads.s3.amazonaws.com/releases/build_agent_wrapper/circleci
+            chmod +x /usr/local/bin/circleci
+            circleci version
 
       - run:
-          name: Run test text
           command: |
-            mkdir /work/test
-            echo "TEST $(date +%Y%m%d%H%M%S)" > /work/test/TEST-$(date +%Y%m%d%H%M%S).txt
-            ls -l /work/test
-          # shell: /boin/bash
-          # environment:
-          #   FOO: BAR
-          # background: true
-          # working_directory: /root
-          # no_output_timeout: 1h
-          # when: always or on_success or on_fail (default on_success)
+            mkdir test
+            echo "$(date) - test-1" > test/test-1-test.target
+            echo "$(date) - test-2" > test/test-2-test.target
 
-      - save_cache:
-          key: my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
-          paths:
-            - /work/test/
-
-      - deploy:
-          name: Deploy it
+      - run:
           command: |
-            echo "deploy!!!"
-
-      # - store_artifacts:
-      #     path: /code/test-results
-      #     destination: prefix
-
-      # - store_test_results:
-      #     path: /tmp/test-results
-
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "b7:35:a6:4e:9b:0d:6d:d4:78:1e:9a:97:2a:66:6b:be"
+            ##circleci tests glob "test/*-test.target" | xargs -n 1 echo
+            TESTFILES=$(circleci tests glob "test/*-test.target" | circleci tests split --split-by=timings)
+            echo ${TESTFILES
+  
