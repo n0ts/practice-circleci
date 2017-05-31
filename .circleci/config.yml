@@ -2,24 +2,12 @@ version: 2
 
 jobs:
   build:
-    # The resource classes are as follows:
-    # small: 1CPU and 1RAM
-    # medium: 2CPU and 4RAM (current 1.0 default)
-    # large: 4CPU and 8RAM
-    ##resource_class: large
-
     docker:
       - image: docker:stable-dind
 
     working_directory: /practice-circleci
 
     parallelism: 1
-
-    # branches:
-    #   only:
-    #     - master
-    #   ignore:
-    #     - develop
 
     steps:
       - run:
@@ -46,5 +34,5 @@ jobs:
           command: |
             ##circleci tests glob "test/*-test.target" | xargs -n 1 echo
             TESTFILES=$(circleci tests glob "test/*-test.target" | circleci tests split --split-by=timings)
-            echo ${TESTFILES
+            echo ${TESTFILES}
   
