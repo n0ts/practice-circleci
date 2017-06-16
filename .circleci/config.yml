@@ -11,25 +11,6 @@ jobs:
     docker:
       - image: n0ts/docker-circleci
         user: docker
-        ##command: [foo, bar]
-        ##entrypoint: entrypoint.sh
-        # environment:
-        #   ENV: CI
-
-      # or - machine: true
-
-      # - image: redis:3
-
-      # - image: mysql:5.7
-      #   environment:
-      #     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      #     MYSQL_DATABASE: test
-      #     MYSQL_USER: test_user
-      #     MYSQL_PASSWORD: testpw
-
-      # - image: postgres:9
-      #   environment:
-      #     POSTGRES_DB: test
 
     environment:
       - CI: true
@@ -41,58 +22,34 @@ jobs:
 
     parallelism: 1
 
-    # branches:
-    #   only:
-    #     - master
-    #   ignore:
-    #     - develop
-
     steps:
       - checkout
 
-      # - setup_remote_docker
-
-      - run:
-          name: Show resource
+    test1:
+      steps:
+        - name: Run test1
           command: |
-            cat /proc/cpuinfo
-            cat /proc/meminfo
+            echo "Run test1"
+            sleep 30
+            echo "Done test1"
 
-      - restore_cache:
-          keys:
-            - my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
-
-      - run:
-          name: Run test text
+    test2:
+      steps:
+        - name: Run tes2
           command: |
-            mkdir /work/test
-            echo "TEST $(date +%Y%m%d%H%M%S)" > /work/test/TEST-$(date +%Y%m%d%H%M%S).txt
-            ls -l /work/test
-          # shell: /boin/bash
-          # environment:
-          #   FOO: BAR
-          # background: true
-          # working_directory: /root
-          # no_output_timeout: 1h
-          # when: always or on_success or on_fail (default on_success)
+            echo "Run test2"
+            sleep 60
+            echo "Done test2"
 
-      - save_cache:
-          key: my-app-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ .Revision }}-{{ .Environment.CI }}
-          paths:
-            - /work/test/
+workflows:
+  version: 2
 
-      - deploy:
-          name: Deploy it
-          command: |
-            echo "deploy!!!"
-
-      # - store_artifacts:
-      #     path: /code/test-results
-      #     destination: prefix
-
-      # - store_test_results:
-      #     path: /tmp/test-results
-
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "b7:35:a6:4e:9b:0d:6d:d4:78:1e:9a:97:2a:66:6b:be"
+  build_and_test:
+    jobs:
+      - build
+      - test1:
+          requires:
+            - test1
+      - test2:
+          requires:
+            - test2
