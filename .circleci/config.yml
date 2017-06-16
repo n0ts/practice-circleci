@@ -40,7 +40,7 @@ jobs:
       - run:
           name: Hello test 1
           command: |
-            mkdir -p test1
+            mkdir -p workspace
             echo "Hello, world! from test 1 - $(date)" > workspace/echo-output
 
   test2:
