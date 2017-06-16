@@ -1,3 +1,9 @@
+defaults: &defaults
+  docker:
+    - image: n0ts/ubuntu
+      user: ubuntu
+  working_directory: /work/practice-circleci
+
 version: 2
 
 jobs:
@@ -23,11 +29,7 @@ jobs:
       - checkout
 
   test1:
-    working_directory: /work/practice-circleci
-
-    docker:
-      - image: n0ts/docker
-
+    <<: *defaults
     steps:
       - run:
           name: Run test 1
@@ -35,13 +37,14 @@ jobs:
             echo "Run test1 - $(date)"
             sleep 5
             echo "Done test1 - $(date)"
+      - run:
+          name: Hello test 1
+          command: |
+            mkdir -p test1
+            echo "Hello, world! from test 1 - $(date)" > workspace/echo-output
 
   test2:
-    docker:
-      - image: n0ts/ubuntu
-
-    working_directory: /work/practice-circleci
-
+    <<: *defaults
     steps:
       - run:
           name: Run test 2
@@ -49,13 +52,19 @@ jobs:
             echo "Run test2 - $(date)"
             sleep 10
             echo "Done test2 - $(date)"
+     - attach_workspace:
+          at: /work/practice-circleci/workspace
+      - run:
+          name: Check workspace
+          command: |
+            if [[ -f /work/practice-circleci/workspace/echo-output ]]; then
+                cat /work/practice-circleci/workspace/echo-output
+            else
+                echo "Nope!"; exit 1
+            fi
 
   deploy:
-    docker:
-      - image: n0ts/ubuntu-java
-
-    working_directory: /work/practice-circleci
-
+    <<: *defaults
     steps:
       - run:
           name: Deploy
@@ -74,7 +83,12 @@ workflows:
       - test2:
           requires:
             - build
+            - test1
       - deploy:
           requires:
             - test1
             - test2
+      # - test_dev:
+      #     filters:
+      #       branches:
+      #         only: dev
