@@ -101,6 +101,8 @@ workflows:
             - build
             - test1
       - test3
+          requires:
+            - build
       - deploy:
           requires:
             - test1
