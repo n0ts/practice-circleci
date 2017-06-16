@@ -31,6 +31,7 @@ jobs:
   test1:
     <<: *defaults
     steps:
+      - checkout
       - run:
           name: Check text
           command: |
@@ -55,6 +56,7 @@ jobs:
   test2:
     <<: *defaults
     steps:
+      - checkout
       - run:
           name: Run test 2
           command: |
@@ -76,6 +78,7 @@ jobs:
   test3:
     <<: *defaults
     steps:
+      - checkout
       - run:
           name: Run test 3
           command: |
