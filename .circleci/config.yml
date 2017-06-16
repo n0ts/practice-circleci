@@ -52,7 +52,7 @@ jobs:
             echo "Run test2 - $(date)"
             sleep 10
             echo "Done test2 - $(date)"
-     - attach_workspace:
+      - attach_workspace:
           at: /work/practice-circleci/workspace
       - run:
           name: Check workspace
