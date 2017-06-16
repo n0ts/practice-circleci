@@ -20,7 +20,7 @@ jobs:
 
     working_directory: /work/practice-circleci
 
-    parallelism: 3
+    parallelism: 1
 
     steps:
       - checkout
@@ -41,6 +41,12 @@ jobs:
             sleep 60
             echo "Done test2"
 
+    deploy:
+      steps:
+        - name: Deploy
+          command: |
+            echo "Deploy"
+
 workflows:
   version: 2
 
@@ -49,7 +55,10 @@ workflows:
       - build
       - test1:
           requires:
-            - test1
+            - build
       - test2:
+          requires:
+            - test1
+      - deploy:
           requires:
             - test2
