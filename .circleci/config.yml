@@ -72,7 +72,7 @@ jobs:
   deploy:
     <<: *defaults
     steps:
-      - run:
+      - deploy:
           name: Deploy
           command: |
             echo "Deploy - $(date)"
