@@ -25,28 +25,43 @@ jobs:
     steps:
       - checkout
 
-    test1:
-      docker:
-        - image: n0ts/docker
+  test1:
+    working_directory: /work/practice-circleci
 
-      steps:
-        - name: Run test1
+    docker:
+      - image: n0ts/docker
+
+    steps:
+      - run:
+          name: Run test1
           command: |
             echo "Run test1"
             sleep 30
             echo "Done test1"
 
-    test2:
-      steps:
-        - name: Run tes2
-          command: |
-            echo "Run test2"
-            sleep 60
-            echo "Done test2"
+  test2:
+    docker:
+      - image: n0ts/ubuntu
 
-    deploy:
-      steps:
-        - name: Deploy
+    working_directory: /work/practice-circleci
+
+    steps:
+      - run:
+          name: Run test1
+          command: |
+            echo "Run test1"
+            sleep 30
+            echo "Done test1"
+
+  deploy:
+    docker:
+      - image: n0ts/ubuntu-java
+
+    working_directory: /work/practice-circleci
+
+    steps:
+      - run:
+          name: Deploy
           command: |
             echo "Deploy"
 
