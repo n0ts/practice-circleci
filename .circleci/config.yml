@@ -43,6 +43,11 @@ jobs:
             mkdir -p workspace
             echo "Hello, world! from test 1 - $(date)" > workspace/echo-output
 
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - echo-output
+
   test2:
     <<: *defaults
     steps:
@@ -54,6 +59,7 @@ jobs:
             echo "Done test2 - $(date)"
       - attach_workspace:
           at: /work/practice-circleci/workspace
+
       - run:
           name: Check workspace
           command: |
