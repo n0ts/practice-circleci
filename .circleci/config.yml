@@ -69,6 +69,16 @@ jobs:
                 echo "Nope!"; exit 1
             fi
 
+  test3:
+    <<: *defaults
+    steps:
+      - run:
+          name: Run test 3
+          command: |
+            echo "Run test3 - $(date)"
+            sleep 10
+            echo "Done test3 - $(date)"
+
   deploy:
     <<: *defaults
     steps:
@@ -90,6 +100,7 @@ workflows:
           requires:
             - build
             - test1
+      - test3
       - deploy:
           requires:
             - test1
