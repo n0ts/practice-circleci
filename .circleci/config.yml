@@ -20,7 +20,7 @@ jobs:
 
     working_directory: /work/practice-circleci
 
-    parallelism: 1
+    parallelism: 2
 
     steps:
       - checkout
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - run:
-          name: Run test1
+          name: Run test 1
           command: |
             echo "Run test1 - $(date)"
             sleep 5
@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - run:
-          name: Run test1
+          name: Run test 2
           command: |
             echo "Run test2 - $(date)"
             sleep 10
