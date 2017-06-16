@@ -35,9 +35,9 @@ jobs:
       - run:
           name: Run test1
           command: |
-            echo "Run test1"
+            echo "Run test1 - $(date)"
             sleep 5
-            echo "Done test1"
+            echo "Done test1 - $(date)"
 
   test2:
     docker:
@@ -49,9 +49,9 @@ jobs:
       - run:
           name: Run test1
           command: |
-            echo "Run test2"
+            echo "Run test2 - $(date)"
             sleep 10
-            echo "Done test2"
+            echo "Done test2 - $(date)"
 
   deploy:
     docker:
@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo "Deploy"
+            echo "Deploy - $(date)"
 
 workflows:
   version: 2
