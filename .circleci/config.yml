@@ -14,9 +14,6 @@ jobs:
 
     environment:
       - CI: true
-      # - MYSQL_DATABASE: test
-      # - MYSQL_USER: test_user
-      # - MYSQL_PASSWORD: testpw
 
     working_directory: /work/practice-circleci
 
