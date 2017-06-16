@@ -26,6 +26,9 @@ jobs:
       - checkout
 
     test1:
+      docker:
+        - image: n0ts/docker
+
       steps:
         - name: Run test1
           command: |
@@ -50,7 +53,7 @@ jobs:
 workflows:
   version: 2
 
-  build_and_test:
+  build-and-test:
     jobs:
       - build
       - test1:
