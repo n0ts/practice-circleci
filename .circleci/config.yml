@@ -32,6 +32,10 @@ jobs:
     <<: *defaults
     steps:
       - run:
+          name: Check text
+          command: |
+            ls test.txt
+      - run:
           name: Run test 1
           command: |
             echo "Run test1 - $(date)"
